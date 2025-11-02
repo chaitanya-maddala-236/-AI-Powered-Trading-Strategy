@@ -20,7 +20,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS
+# Custom CSS - IMPROVED CONTRAST
 st.markdown("""
 <style>
     #MainMenu {visibility: hidden;}
@@ -37,7 +37,7 @@ st.markdown("""
     }
     
     .main-content {
-        background: white;
+        background: #ffffff;
         border-radius: 30px;
         padding: 3rem;
         box-shadow: 0 20px 60px rgba(0,0,0,0.3);
@@ -48,21 +48,23 @@ st.markdown("""
         text-align: center;
         padding: 3rem 2rem 2rem 2rem;
         margin-bottom: 3rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        color: white;
     }
     
     .hero h1 {
         font-size: 4rem;
         font-weight: 900;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
+        color: white !important;
         margin: 0;
         line-height: 1.2;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
     }
     
     .hero p {
         font-size: 1.4rem;
-        color: #666;
+        color: rgba(255,255,255,0.95) !important;
         margin-top: 1rem;
         font-weight: 500;
     }
@@ -70,10 +72,12 @@ st.markdown("""
     .section-title {
         font-size: 1.8rem;
         font-weight: 700;
-        color: #667eea;
+        color: #2d3748;
         margin: 2rem 0 1rem 0;
-        padding-bottom: 0.5rem;
-        border-bottom: 3px solid #667eea;
+        padding: 1rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white !important;
+        border-radius: 10px;
     }
     
     .stMetric {
@@ -102,7 +106,7 @@ st.markdown("""
     .stButton>button {
         width: 100%;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+        color: white !important;
         font-weight: 700;
         border: none;
         padding: 1.2rem 3rem;
@@ -110,6 +114,7 @@ st.markdown("""
         font-size: 1.3rem;
         box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         margin-top: 1rem;
+        transition: all 0.3s ease;
     }
     
     .stButton>button:hover {
@@ -128,7 +133,7 @@ st.markdown("""
         border-radius: 10px;
         padding: 0.8rem 1.5rem;
         font-weight: 600;
-        color: #333 !important;
+        color: #2d3748 !important;
     }
     
     .stTabs [aria-selected="true"] {
@@ -147,7 +152,19 @@ st.markdown("""
     
     .info-box h3 {
         margin-top: 0;
-        color: white;
+        color: white !important;
+    }
+    
+    .info-box p {
+        color: rgba(255,255,255,0.95) !important;
+    }
+    
+    .info-box ul {
+        color: rgba(255,255,255,0.95) !important;
+    }
+    
+    .info-box li {
+        color: rgba(255,255,255,0.95) !important;
     }
     
     .feature-card {
@@ -157,6 +174,7 @@ st.markdown("""
         padding: 2rem;
         text-align: center;
         height: 100%;
+        transition: all 0.3s ease;
     }
     
     .feature-card:hover {
@@ -166,26 +184,27 @@ st.markdown("""
     }
     
     .feature-card h3 {
-        color: #667eea;
+        color: #667eea !important;
         font-size: 1.3rem;
         margin-bottom: 1rem;
     }
     
     .feature-card p {
-        color: #555;
+        color: #2d3748 !important;
         line-height: 1.6;
     }
     
     .stats-box {
-        background: #f8f9fa;
+        background: #ffffff;
         border-radius: 15px;
         padding: 1.5rem;
-        border: 2px solid #e9ecef;
+        border: 3px solid #667eea;
         margin: 1rem 0;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
     
     .stats-box h3 {
-        color: #667eea;
+        color: #667eea !important;
         margin-top: 0;
     }
     
@@ -198,34 +217,87 @@ st.markdown("""
     }
     
     .guide-section h4 {
-        color: #667eea;
+        color: #667eea !important;
         margin-top: 0;
     }
     
     .guide-section p {
-        color: #555;
+        color: #2d3748 !important;
         line-height: 1.8;
     }
     
+    .guide-section ul {
+        color: #2d3748 !important;
+    }
+    
+    .guide-section li {
+        color: #2d3748 !important;
+    }
+    
     .output-summary {
-        background: #f0f7ff;
-        border: 3px solid #667eea;
+        background: #ffffff;
+        border: 4px solid #667eea;
         border-radius: 20px;
         padding: 2rem;
         margin: 2rem 0;
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.2);
     }
     
     .output-summary h2 {
-        color: #667eea;
+        color: #667eea !important;
         margin-top: 0;
+        font-size: 2rem;
     }
     
     .summary-metric {
-        background: white;
-        padding: 1rem;
+        background: #f8f9fa;
+        padding: 1.2rem;
         border-radius: 10px;
+        margin: 0.8rem 0;
+        border-left: 5px solid #667eea;
+        color: #2d3748 !important;
+    }
+    
+    .summary-metric strong {
+        color: #667eea !important;
+    }
+    
+    .metric-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 1.5rem;
+        border-radius: 15px;
+        text-align: center;
+        color: white;
+        box-shadow: 0 6px 15px rgba(102, 126, 234, 0.3);
         margin: 0.5rem 0;
-        border-left: 4px solid #667eea;
+    }
+    
+    .metric-card h4 {
+        color: rgba(255,255,255,0.9) !important;
+        font-size: 0.9rem;
+        margin: 0 0 0.5rem 0;
+        font-weight: 600;
+    }
+    
+    .metric-card .value {
+        color: white !important;
+        font-size: 2rem;
+        font-weight: 800;
+        margin: 0.5rem 0;
+    }
+    
+    .metric-card .delta {
+        color: rgba(255,255,255,0.85) !important;
+        font-size: 0.9rem;
+    }
+    
+    /* Fix for dataframe visibility */
+    .stDataFrame {
+        background: white;
+    }
+    
+    div[data-testid="stDataFrame"] {
+        background: white;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -524,80 +596,120 @@ if 'run' in st.session_state and st.session_state.run:
         
         st.success("🎉 Analysis Complete!")
         
-        # ============ OUTPUT SUMMARY ============
-        st.markdown("""
-        <div class="output-summary">
-            <h2>📋 BACKTEST RESULTS SUMMARY</h2>
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # Calculate metrics
+        # ============ CALCULATE ALL METRICS ============
         total_return = (cumulative_returns.iloc[-1] - 1) * 100
         sp500_total_return = (sp500_cumulative.iloc[-1] - 1) * 100
         ann_return = portfolio_returns.mean() * 252 * 100
         ann_vol = portfolio_returns.std() * np.sqrt(252) * 100
         sharpe = (portfolio_returns.mean() / portfolio_returns.std()) * np.sqrt(252)
         sp500_ann_return = sp500_returns.mean() * 252 * 100
+        sp500_ann_vol = sp500_returns.std() * np.sqrt(252) * 100
         sp500_sharpe = (sp500_returns.mean() / sp500_returns.std()) * np.sqrt(252)
         max_dd = ((cumulative_returns / cumulative_returns.cummax()) - 1).min() * 100
+        sp500_max_dd = ((sp500_cumulative / sp500_cumulative.cummax()) - 1).min() * 100
         
-        # Summary text
-        st.markdown(f"""
-        <div class="summary-metric">
-            <strong>📊 Strategy Performance:</strong> Your AI-selected portfolio of {actual_top_n} stocks from Cluster {best_cluster} 
-            achieved a total return of <strong style="color: {'green' if total_return > 0 else 'red'};">{total_return:.2f}%</strong> 
-            compared to S&P 500's {sp500_total_return:.2f}% (outperformance: {total_return - sp500_total_return:.2f}%)
-        </div>
+        # Win rate
+        win_rate = (portfolio_returns > 0).sum() / len(portfolio_returns) * 100
+        sp500_win_rate = (sp500_returns > 0).sum() / len(sp500_returns) * 100
         
-        <div class="summary-metric">
-            <strong>📈 Risk-Adjusted Returns:</strong> Sharpe Ratio of <strong style="color: #667eea;">{sharpe:.3f}</strong> 
-            vs S&P 500's {sp500_sharpe:.3f}, indicating {'better' if sharpe > sp500_sharpe else 'lower'} risk-adjusted performance
-        </div>
-        
-        <div class="summary-metric">
-            <strong>⚠️ Risk Metrics:</strong> Maximum drawdown was <strong>{max_dd:.2f}%</strong> with 
-            annualized volatility of {ann_vol:.2f}%
-        </div>
-        
-        <div class="summary-metric">
-            <strong>🤖 ML Insights:</strong> K-Means identified {n_clusters} distinct clusters. 
-            The best performing cluster contained {len(cluster_stocks)} stocks with average Sharpe ratio of {cluster_stats.loc[best_cluster, 'sharpe_ratio']:.3f}
-        </div>
-        
-        <div class="summary-metric">
-            <strong>💼 Selected Portfolio:</strong> {', '.join(top_stocks)}
-        </div>
-        """, unsafe_allow_html=True)
-        
-        # PERFORMANCE METRICS
-        st.markdown('<p class="section-title">📊 Performance Metrics</p>', unsafe_allow_html=True)
+        # ============ EXECUTIVE SUMMARY ============
+        st.markdown('<p class="section-title">📊 Executive Summary</p>', unsafe_allow_html=True)
         
         col1, col2, col3, col4 = st.columns(4)
         
         with col1:
-            st.metric("Total Return", f"{total_return:.2f}%", 
-                     delta=f"{total_return - sp500_total_return:.2f}% vs S&P")
-        with col2:
-            st.metric("Annual Return", f"{ann_return:.2f}%",
-                     delta=f"{ann_return - sp500_ann_return:.2f}% vs S&P")
-        with col3:
-            st.metric("Sharpe Ratio", f"{sharpe:.3f}",
-                     delta=f"{sharpe - sp500_sharpe:.3f} vs S&P")
-        with col4:
-            st.metric("Max Drawdown", f"{max_dd:.2f}%")
+            st.markdown(f"""
+            <div class="metric-card">
+                <h4>Total Return</h4>
+                <div class="value">{total_return:.1f}%</div>
+                <div class="delta">vs S&P: {total_return - sp500_total_return:+.1f}%</div>
+            </div>
+            """, unsafe_allow_html=True)
         
-        # CUMULATIVE RETURNS CHART
+        with col2:
+            st.markdown(f"""
+            <div class="metric-card">
+                <h4>Sharpe Ratio</h4>
+                <div class="value">{sharpe:.2f}</div>
+                <div class="delta">vs S&P: {sharpe - sp500_sharpe:+.2f}</div>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col3:
+            st.markdown(f"""
+            <div class="metric-card">
+                <h4>Annual Return</h4>
+                <div class="value">{ann_return:.1f}%</div>
+                <div class="delta">vs S&P: {ann_return - sp500_ann_return:+.1f}%</div>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col4:
+            st.markdown(f"""
+            <div class="metric-card">
+                <h4>Max Drawdown</h4>
+                <div class="value">{max_dd:.1f}%</div>
+                <div class="delta">vs S&P: {max_dd - sp500_max_dd:+.1f}%</div>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        # ============ DETAILED METRICS COMPARISON ============
+        st.markdown('<p class="section-title">📈 Detailed Performance Metrics</p>', unsafe_allow_html=True)
+        
+        metrics_comparison = pd.DataFrame({
+            'Metric': ['Total Return', 'Annual Return', 'Annual Volatility', 'Sharpe Ratio', 
+                      'Max Drawdown', 'Win Rate', 'Best Day', 'Worst Day'],
+            'AI Strategy': [
+                f"{total_return:.2f}%",
+                f"{ann_return:.2f}%",
+                f"{ann_vol:.2f}%",
+                f"{sharpe:.3f}",
+                f"{max_dd:.2f}%",
+                f"{win_rate:.1f}%",
+                f"{portfolio_returns.max()*100:.2f}%",
+                f"{portfolio_returns.min()*100:.2f}%"
+            ],
+            'S&P 500': [
+                f"{sp500_total_return:.2f}%",
+                f"{sp500_ann_return:.2f}%",
+                f"{sp500_ann_vol:.2f}%",
+                f"{sp500_sharpe:.3f}",
+                f"{sp500_max_dd:.2f}%",
+                f"{sp500_win_rate:.1f}%",
+                f"{sp500_returns.max()*100:.2f}%",
+                f"{sp500_returns.min()*100:.2f}%"
+            ],
+            'Difference': [
+                f"{total_return - sp500_total_return:+.2f}%",
+                f"{ann_return - sp500_ann_return:+.2f}%",
+                f"{ann_vol - sp500_ann_vol:+.2f}%",
+                f"{sharpe - sp500_sharpe:+.3f}",
+                f"{max_dd - sp500_max_dd:+.2f}%",
+                f"{win_rate - sp500_win_rate:+.1f}%",
+                f"{(portfolio_returns.max() - sp500_returns.max())*100:+.2f}%",
+                f"{(portfolio_returns.min() - sp500_returns.min())*100:+.2f}%"
+            ]
+        })
+        
+        st.dataframe(metrics_comparison, use_container_width=True, hide_index=True)
+        
+        # ============ CUMULATIVE RETURNS CHART ============
         st.markdown('<p class="section-title">💹 Cumulative Returns Over Time</p>', unsafe_allow_html=True)
         
         fig = go.Figure()
         fig.add_trace(go.Scatter(
-            x=cumulative_returns.index, y=(cumulative_returns - 1) * 100,
-            name='AI Strategy', line=dict(color='#667eea', width=3),
-            fill='tozeroy', fillcolor='rgba(102, 126, 234, 0.1)'
+            x=cumulative_returns.index, 
+            y=(cumulative_returns - 1) * 100,
+            name='AI Strategy', 
+            line=dict(color='#667eea', width=3),
+            fill='tozeroy', 
+            fillcolor='rgba(102, 126, 234, 0.1)'
         ))
         fig.add_trace(go.Scatter(
-            x=sp500_cumulative.index, y=(sp500_cumulative - 1) * 100,
-            name='S&P 500', line=dict(color='#764ba2', width=3, dash='dash')
+            x=sp500_cumulative.index, 
+            y=(sp500_cumulative - 1) * 100,
+            name='S&P 500', 
+            line=dict(color='#764ba2', width=3, dash='dash')
         ))
         fig.update_layout(
             height=500, 
@@ -612,34 +724,133 @@ if 'run' in st.session_state and st.session_state.run:
         )
         st.plotly_chart(fig, use_container_width=True)
         
-        # CLUSTER ANALYSIS
+        # ============ DRAWDOWN CHART ============
+        st.markdown('<p class="section-title">📉 Drawdown Analysis</p>', unsafe_allow_html=True)
+        
+        portfolio_dd = ((cumulative_returns / cumulative_returns.cummax()) - 1) * 100
+        sp500_dd = ((sp500_cumulative / sp500_cumulative.cummax()) - 1) * 100
+        
+        fig_dd = go.Figure()
+        fig_dd.add_trace(go.Scatter(
+            x=portfolio_dd.index, 
+            y=portfolio_dd,
+            name='AI Strategy', 
+            line=dict(color='#667eea', width=2),
+            fill='tozeroy', 
+            fillcolor='rgba(102, 126, 234, 0.2)'
+        ))
+        fig_dd.add_trace(go.Scatter(
+            x=sp500_dd.index, 
+            y=sp500_dd,
+            name='S&P 500', 
+            line=dict(color='#764ba2', width=2, dash='dash')
+        ))
+        fig_dd.update_layout(
+            height=400, 
+            xaxis_title='Date', 
+            yaxis_title='Drawdown (%)',
+            hovermode='x unified', 
+            plot_bgcolor='white',
+            paper_bgcolor='white',
+            xaxis=dict(showgrid=True, gridcolor='#f0f0f0'),
+            yaxis=dict(showgrid=True, gridcolor='#f0f0f0'),
+            legend=dict(x=0.01, y=0.01, bgcolor='rgba(255,255,255,0.8)')
+        )
+        st.plotly_chart(fig_dd, use_container_width=True)
+        
+        # ============ RETURNS DISTRIBUTION ============
+        st.markdown('<p class="section-title">📊 Returns Distribution</p>', unsafe_allow_html=True)
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            fig_hist = go.Figure()
+            fig_hist.add_trace(go.Histogram(
+                x=portfolio_returns * 100,
+                name='AI Strategy',
+                marker_color='#667eea',
+                opacity=0.7,
+                nbinsx=50
+            ))
+            fig_hist.add_trace(go.Histogram(
+                x=sp500_returns * 100,
+                name='S&P 500',
+                marker_color='#764ba2',
+                opacity=0.7,
+                nbinsx=50
+            ))
+            fig_hist.update_layout(
+                height=400,
+                xaxis_title='Daily Return (%)',
+                yaxis_title='Frequency',
+                barmode='overlay',
+                plot_bgcolor='white',
+                paper_bgcolor='white',
+                xaxis=dict(showgrid=True, gridcolor='#f0f0f0'),
+                yaxis=dict(showgrid=True, gridcolor='#f0f0f0')
+            )
+            st.plotly_chart(fig_hist, use_container_width=True)
+        
+        with col2:
+            # Rolling Sharpe Ratio
+            rolling_sharpe_portfolio = (portfolio_returns.rolling(60).mean() / portfolio_returns.rolling(60).std()) * np.sqrt(252)
+            rolling_sharpe_sp500 = (sp500_returns.rolling(60).mean() / sp500_returns.rolling(60).std()) * np.sqrt(252)
+            
+            fig_sharpe = go.Figure()
+            fig_sharpe.add_trace(go.Scatter(
+                x=rolling_sharpe_portfolio.index,
+                y=rolling_sharpe_portfolio,
+                name='AI Strategy',
+                line=dict(color='#667eea', width=2)
+            ))
+            fig_sharpe.add_trace(go.Scatter(
+                x=rolling_sharpe_sp500.index,
+                y=rolling_sharpe_sp500,
+                name='S&P 500',
+                line=dict(color='#764ba2', width=2, dash='dash')
+            ))
+            fig_sharpe.update_layout(
+                height=400,
+                title='Rolling 60-Day Sharpe Ratio',
+                xaxis_title='Date',
+                yaxis_title='Sharpe Ratio',
+                plot_bgcolor='white',
+                paper_bgcolor='white',
+                xaxis=dict(showgrid=True, gridcolor='#f0f0f0'),
+                yaxis=dict(showgrid=True, gridcolor='#f0f0f0')
+            )
+            st.plotly_chart(fig_sharpe, use_container_width=True)
+        
+        # ============ CLUSTER ANALYSIS ============
+        st.markdown('<p class="section-title">🤖 Machine Learning Cluster Analysis</p>', unsafe_allow_html=True)
+        
         col1, col2 = st.columns(2)
         
         with col1:
             st.markdown("### 📈 All Clusters Performance")
             cluster_display = cluster_stats.copy()
-            cluster_display['Return'] = (cluster_display['mean_return'] * 100).round(2)
-            cluster_display['Vol'] = (cluster_display['volatility'] * 100).round(2)
+            cluster_display['Return %'] = (cluster_display['mean_return'] * 100).round(2)
+            cluster_display['Vol %'] = (cluster_display['volatility'] * 100).round(2)
             cluster_display['Sharpe'] = cluster_display['sharpe_ratio'].round(3)
-            cluster_display['Mom'] = (cluster_display['momentum_12m'] * 100).round(2)
-            cluster_display = cluster_display[['Return', 'Vol', 'Sharpe', 'Mom', 'count']]
-            cluster_display.columns = ['Return %', 'Vol %', 'Sharpe', 'Momentum %', 'Stocks']
+            cluster_display['Mom %'] = (cluster_display['momentum_12m'] * 100).round(2)
+            cluster_display['Stocks'] = cluster_display['count'].astype(int)
+            cluster_display = cluster_display[['Return %', 'Vol %', 'Sharpe', 'Mom %', 'Stocks']]
             
             st.dataframe(
                 cluster_display.style.background_gradient(cmap='RdYlGn', subset=['Sharpe']).format(precision=2),
                 use_container_width=True
             )
-            st.caption(f"⭐ Best Cluster: #{best_cluster} with Sharpe Ratio of {cluster_stats.loc[best_cluster, 'sharpe_ratio']:.3f}")
+            st.caption(f"⭐ **Best Cluster:** #{best_cluster} with Sharpe Ratio of {cluster_stats.loc[best_cluster, 'sharpe_ratio']:.3f}")
         
         with col2:
             st.markdown("### 🎯 PCA Visualization")
-            fig = go.Figure()
+            fig_pca = go.Figure()
             colors = px.colors.qualitative.Set2[:n_clusters]
             
             for i, cluster in enumerate(range(n_clusters)):
                 mask = features_clustered['cluster'] == cluster
                 is_best = (cluster == best_cluster)
-                fig.add_trace(go.Scatter(
+                fig_pca.add_trace(go.Scatter(
                     x=X_pca[mask, 0], 
                     y=X_pca[mask, 1],
                     mode='markers', 
@@ -652,7 +863,7 @@ if 'run' in st.session_state and st.session_state.run:
                     )
                 ))
             
-            fig.update_layout(
+            fig_pca.update_layout(
                 height=400, 
                 plot_bgcolor='white', 
                 paper_bgcolor='white',
@@ -660,9 +871,47 @@ if 'run' in st.session_state and st.session_state.run:
                 yaxis=dict(showgrid=True, gridcolor='#f0f0f0', title='Principal Component 2'),
                 legend=dict(x=0.01, y=0.99)
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig_pca, use_container_width=True)
         
-        # SELECTED PORTFOLIO
+        # ============ CLUSTER COMPARISON BAR CHART ============
+        st.markdown("### 📊 Cluster Comparison")
+        
+        fig_clusters = make_subplots(
+            rows=1, cols=3,
+            subplot_titles=('Average Return %', 'Sharpe Ratio', 'Volatility %')
+        )
+        
+        cluster_indices = cluster_display.index.tolist()
+        colors_bars = ['#667eea' if i == best_cluster else '#cccccc' for i in cluster_indices]
+        
+        fig_clusters.add_trace(
+            go.Bar(x=cluster_indices, y=cluster_display['Return %'], 
+                   marker_color=colors_bars, name='Return'),
+            row=1, col=1
+        )
+        
+        fig_clusters.add_trace(
+            go.Bar(x=cluster_indices, y=cluster_display['Sharpe'], 
+                   marker_color=colors_bars, name='Sharpe'),
+            row=1, col=2
+        )
+        
+        fig_clusters.add_trace(
+            go.Bar(x=cluster_indices, y=cluster_display['Vol %'], 
+                   marker_color=colors_bars, name='Volatility'),
+            row=1, col=3
+        )
+        
+        fig_clusters.update_layout(
+            height=400,
+            showlegend=False,
+            plot_bgcolor='white',
+            paper_bgcolor='white'
+        )
+        fig_clusters.update_xaxes(title_text="Cluster", showgrid=True, gridcolor='#f0f0f0')
+        st.plotly_chart(fig_clusters, use_container_width=True)
+        
+        # ============ SELECTED PORTFOLIO ============
         st.markdown(f'<p class="section-title">💼 Selected Portfolio Details (Cluster {best_cluster})</p>', unsafe_allow_html=True)
         
         selected_df = cluster_stocks.loc[top_stocks][['mean_return', 'volatility', 'sharpe_ratio', 'momentum_12m', 'rsi']].copy()
@@ -678,7 +927,99 @@ if 'run' in st.session_state and st.session_state.run:
             use_container_width=True
         )
         
-        # DOWNLOAD SECTION
+        # Portfolio composition chart
+        st.markdown("### 📊 Portfolio Stock Performance")
+        
+        fig_portfolio = go.Figure()
+        fig_portfolio.add_trace(go.Bar(
+            x=selected_df.index,
+            y=selected_df['Return %'],
+            marker_color='#667eea',
+            name='Annual Return %',
+            text=selected_df['Return %'],
+            textposition='outside'
+        ))
+        
+        fig_portfolio.update_layout(
+            height=400,
+            xaxis_title='Stock',
+            yaxis_title='Annual Return (%)',
+            plot_bgcolor='white',
+            paper_bgcolor='white',
+            xaxis=dict(showgrid=False),
+            yaxis=dict(showgrid=True, gridcolor='#f0f0f0')
+        )
+        st.plotly_chart(fig_portfolio, use_container_width=True)
+        
+        # ============ MONTHLY RETURNS HEATMAP ============
+        st.markdown('<p class="section-title">📅 Monthly Returns Heatmap</p>', unsafe_allow_html=True)
+        
+        monthly_returns = portfolio_returns.resample('M').apply(lambda x: (1 + x).prod() - 1) * 100
+        monthly_returns_df = pd.DataFrame({
+            'Year': monthly_returns.index.year,
+            'Month': monthly_returns.index.month,
+            'Return': monthly_returns.values
+        })
+        
+        pivot_table = monthly_returns_df.pivot(index='Year', columns='Month', values='Return')
+        
+        fig_heatmap = go.Figure(data=go.Heatmap(
+            z=pivot_table.values,
+            x=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            y=pivot_table.index,
+            colorscale='RdYlGn',
+            zmid=0,
+            text=np.round(pivot_table.values, 1),
+            texttemplate='%{text}%',
+            textfont={"size": 10},
+            colorbar=dict(title="Return %")
+        ))
+        
+        fig_heatmap.update_layout(
+            height=400,
+            xaxis_title='Month',
+            yaxis_title='Year',
+            plot_bgcolor='white',
+            paper_bgcolor='white'
+        )
+        st.plotly_chart(fig_heatmap, use_container_width=True)
+        
+        # ============ KEY INSIGHTS ============
+        st.markdown('<p class="section-title">💡 Key Insights</p>', unsafe_allow_html=True)
+        
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            outperformance = "outperformed" if total_return > sp500_total_return else "underperformed"
+            sharpe_comparison = "better" if sharpe > sp500_sharpe else "lower"
+            vol_comparison = "higher" if ann_vol > sp500_ann_vol else "lower"
+            
+            st.markdown(f"""
+            <div class="stats-box">
+                <h3>📊 Performance Summary</h3>
+                <ul style="color: #2d3748; line-height: 2;">
+                    <li>Portfolio <strong>{outperformance}</strong> S&P 500 by <strong>{abs(total_return - sp500_total_return):.2f}%</strong></li>
+                    <li><strong>{sharpe_comparison.capitalize()}</strong> risk-adjusted returns (Sharpe: {sharpe:.3f} vs {sp500_sharpe:.3f})</li>
+                    <li><strong>{vol_comparison.capitalize()}</strong> volatility ({ann_vol:.1f}% vs {sp500_ann_vol:.1f}%)</li>
+                    <li>Win rate: <strong>{win_rate:.1f}%</strong> of trading days</li>
+                </ul>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with col2:
+            st.markdown(f"""
+            <div class="stats-box">
+                <h3>🤖 ML Algorithm Insights</h3>
+                <ul style="color: #2d3748; line-height: 2;">
+                    <li>Analyzed <strong>{len(features_clustered)}</strong> stocks across <strong>{n_clusters}</strong> clusters</li>
+                    <li>Best cluster had <strong>{len(cluster_stocks)}</strong> stocks with avg Sharpe of <strong>{cluster_stats.loc[best_cluster, 'sharpe_ratio']:.3f}</strong></li>
+                    <li>Selected top <strong>{actual_top_n}</strong> stocks based on Sharpe ratio</li>
+                    <li>Portfolio correlation optimized through clustering</li>
+                </ul>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        # ============ DOWNLOAD SECTION ============
         st.markdown('<p class="section-title">📥 Download Results</p>', unsafe_allow_html=True)
         
         col1, col2, col3 = st.columns(3)
@@ -696,20 +1037,31 @@ if 'run' in st.session_state and st.session_state.run:
             st.download_button("📈 Returns CSV", results_csv, "returns.csv", "text/csv")
         
         with col3:
-            data_csv = data.to_csv()
-            st.download_button("💾 Price Data", data_csv, "price_data.csv", "text/csv")
+            # Comprehensive report
+            report_data = {
+                'Metric': ['Total Return', 'Annual Return', 'Annual Volatility', 'Sharpe Ratio', 
+                          'Max Drawdown', 'Win Rate', 'Best Day', 'Worst Day'],
+                'AI Strategy': [total_return, ann_return, ann_vol, sharpe, max_dd, win_rate,
+                              portfolio_returns.max()*100, portfolio_returns.min()*100],
+                'S&P 500': [sp500_total_return, sp500_ann_return, sp500_ann_vol, sp500_sharpe,
+                           sp500_max_dd, sp500_win_rate, sp500_returns.max()*100, sp500_returns.min()*100]
+            }
+            report_csv = pd.DataFrame(report_data).to_csv(index=False)
+            st.download_button("📊 Full Report", report_csv, "full_report.csv", "text/csv")
         
-        # FINAL SUMMARY
+        # ============ FINAL SUMMARY ============
         st.markdown(f"""
         <div class="info-box">
-            <h3>✅ Analysis Complete!</h3>
-            <p><strong>What Just Happened:</strong></p>
-            <ul style="text-align: left; line-height: 1.8;">
-                <li>📊 Analyzed {len(data.columns)} stocks from {stock_universe}</li>
-                <li>🤖 K-Means algorithm created {n_clusters} clusters based on 9 technical indicators</li>
-                <li>🎯 Selected Cluster {best_cluster} with highest Sharpe ratio ({cluster_stats.loc[best_cluster, 'sharpe_ratio']:.3f})</li>
-                <li>💼 Built portfolio of top {actual_top_n} stocks: {', '.join(top_stocks[:3])}{'...' if len(top_stocks) > 3 else ''}</li>
-                <li>📈 Portfolio {'outperformed' if total_return > sp500_total_return else 'underperformed'} S&P 500 by {abs(total_return - sp500_total_return):.2f}%</li>
+            <h3>✅ Backtest Complete - Summary</h3>
+            <p style="font-size: 1.1rem;"><strong>What the AI Algorithm Did:</strong></p>
+            <ul style="text-align: left; line-height: 1.8; font-size: 1rem;">
+                <li>📊 Analyzed <strong>{len(data.columns)}</strong> stocks from <strong>{stock_universe}</strong></li>
+                <li>🔬 Calculated <strong>9 technical indicators</strong> (returns, volatility, Sharpe, momentum, RSI, drawdown)</li>
+                <li>🤖 K-Means clustering identified <strong>{n_clusters}</strong> distinct groups</li>
+                <li>🎯 Selected Cluster <strong>{best_cluster}</strong> (highest Sharpe: {cluster_stats.loc[best_cluster, 'sharpe_ratio']:.3f})</li>
+                <li>💼 Built portfolio of <strong>{actual_top_n}</strong> best stocks: <strong>{', '.join(top_stocks)}</strong></li>
+                <li>📈 Result: <strong>{total_return:.2f}%</strong> return vs S&P 500's <strong>{sp500_total_return:.2f}%</strong> ({total_return - sp500_total_return:+.2f}%)</li>
+                <li>⚡ Sharpe Ratio: <strong>{sharpe:.3f}</strong> vs S&P's <strong>{sp500_sharpe:.3f}</strong></li>
             </ul>
         </div>
         """, unsafe_allow_html=True)
@@ -812,71 +1164,6 @@ else:
                 <li>💼 Selected portfolio details</li>
                 <li>📥 Downloadable CSV reports</li>
             </ul>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # EXAMPLE OUTPUT PREVIEW
-    st.markdown('<p class="section-title">👀 What You\'ll Get</p>', unsafe_allow_html=True)
-    
-    st.markdown("""
-    <div class="output-summary">
-        <h2>📋 Sample Output Summary</h2>
-        <div class="summary-metric">
-            <strong>📊 Strategy Performance:</strong> Your AI-selected portfolio achieved a total return of <strong style="color: green;">45.32%</strong> 
-            compared to S&P 500's 28.15% (outperformance: +17.17%)
-        </div>
-        <div class="summary-metric">
-            <strong>📈 Risk-Adjusted Returns:</strong> Sharpe Ratio of <strong style="color: #667eea;">1.423</strong> 
-            vs S&P 500's 1.087, indicating superior risk-adjusted performance
-        </div>
-        <div class="summary-metric">
-            <strong>⚠️ Risk Metrics:</strong> Maximum drawdown was <strong>-18.45%</strong> with 
-            annualized volatility of 22.34%
-        </div>
-        <div class="summary-metric">
-            <strong>🤖 ML Insights:</strong> K-Means identified 5 distinct clusters. 
-            The best performing cluster contained 12 stocks with average Sharpe ratio of 1.234
-        </div>
-        <div class="summary-metric">
-            <strong>💼 Selected Portfolio:</strong> AAPL, NVDA, MSFT, GOOGL, META
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # KEY FEATURES
-    st.markdown('<p class="section-title">✨ Key Features</p>', unsafe_allow_html=True)
-    
-    col1, col2, col3, col4 = st.columns(4)
-    
-    with col1:
-        st.markdown("""
-        <div class="feature-card">
-            <h3>⚡ Fast</h3>
-            <p>Results in 30-60 seconds</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown("""
-        <div class="feature-card">
-            <h3>🎯 Accurate</h3>
-            <p>9 technical indicators</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col3:
-        st.markdown("""
-        <div class="feature-card">
-            <h3>📊 Visual</h3>
-            <p>Interactive charts</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col4:
-        st.markdown("""
-        <div class="feature-card">
-            <h3>📥 Exportable</h3>
-            <p>Download all data</p>
         </div>
         """, unsafe_allow_html=True)
     
