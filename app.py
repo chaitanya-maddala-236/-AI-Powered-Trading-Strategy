@@ -360,6 +360,14 @@ with tab2:
             value=80,
             help="Filter stocks with insufficient data"
         )
+    
+    # Cache clearing button
+    st.markdown("---")
+    if st.button("🗑️ Clear Data Cache", help="Clear yfinance cache if experiencing errors"):
+        clear_yfinance_cache()
+        st.cache_data.clear()
+        st.success("✅ Cache cleared! Try running again.")
+        st.rerun()
 
 with tab3:
     data_mode = st.radio(
@@ -399,17 +407,74 @@ if run_backtest:
     st.session_state.run = True
 
 # Functions
-@st.cache_data(show_spinner=False)
+def clear_yfinance_cache():
+    """Clear yfinance cache to prevent database locks"""
+    import shutil
+    import os
+    
+    cache_dir = os.path.expanduser('~/.cache/py-yfinance')
+    if os.path.exists(cache_dir):
+        try:
+            shutil.rmtree(cache_dir)
+        except:
+            pass
+
+@st.cache_data(show_spinner=False, ttl=3600)
 def download_stock_data(tickers, start, end):
-    """Download stock data with proper error handling"""
+    """Download stock data with proper error handling and retry logic"""
+    import time
+    
+    # Method 1: Try batch download first (faster)
     try:
-        data = yf.download(tickers, start=start, end=end, progress=False, threads=True)['Adj Close']
-        if isinstance(data, pd.Series):
-            data = data.to_frame(name=tickers[0])
-        return data.dropna(axis=1, thresh=len(data)*0.8)
-    except Exception as e:
-        st.error(f"Error downloading data: {str(e)}")
-        return None
+        data = yf.download(
+            tickers, 
+            start=start, 
+            end=end, 
+            progress=False,
+            threads=False,
+            group_by='column'
+        )
+        
+        if len(tickers) == 1:
+            data = data['Adj Close'].to_frame(name=tickers[0])
+        else:
+            data = data['Adj Close']
+        
+        if len(data) > 0:
+            data = data.dropna(axis=1, thresh=len(data)*0.8)
+            return data
+    except:
+        pass
+    
+    # Method 2: Download one by one (slower but more reliable)
+    st.info("⏳ Using sequential download (more reliable)...")
+    
+    all_data = {}
+    failed = []
+    
+    for ticker in tickers:
+        try:
+            ticker_data = yf.download(ticker, start=start, end=end, progress=False)
+            if 'Adj Close' in ticker_data.columns:
+                all_data[ticker] = ticker_data['Adj Close']
+            elif len(ticker_data.columns) > 0:
+                all_data[ticker] = ticker_data.iloc[:, 0]
+            
+            time.sleep(0.1)  # Small delay to avoid rate limits
+            
+        except Exception as e:
+            failed.append(ticker)
+            continue
+    
+    if failed:
+        st.warning(f"⚠️ Failed to download: {', '.join(failed[:5])}")
+    
+    if all_data:
+        data = pd.DataFrame(all_data)
+        data = data.dropna(axis=1, thresh=len(data)*0.8)
+        return data
+    
+    return None
 
 def calculate_features(data):
     """Calculate technical features"""
@@ -523,7 +588,7 @@ if 'run' in st.session_state and st.session_state.run:
         portfolio_returns, cumulative_returns = calculate_portfolio_performance(data, top_stocks)
         
         # Benchmark
-        sp500 = yf.download("^GSPC", start=start_date, end=end_date, progress=False)['Adj Close']
+        sp500 = yf.download("^GSPC", start=start_date, end=end_date, progress=False, threads=False)['Adj Close']
         sp500_returns = sp500.pct_change()
         sp500_cumulative = (1 + sp500_returns).cumprod()
         
@@ -711,4 +776,3 @@ else:
 
 # Close main content wrapper
 st.markdown('</div>', unsafe_allow_html=True)
-ow_html=True)
