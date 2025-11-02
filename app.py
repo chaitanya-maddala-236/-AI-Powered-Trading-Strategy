@@ -9,7 +9,6 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.cluster import KMeans
 from sklearn.decomposition import PCA
 from datetime import datetime, timedelta
-import io
 import warnings
 warnings.filterwarnings("ignore")
 
@@ -21,28 +20,22 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS for centered, beautiful UI
+# Custom CSS
 st.markdown("""
 <style>
-    /* Hide default elements */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
     header {visibility: hidden;}
     
-    /* Center everything */
     .main .block-container {
         max-width: 1400px;
-        padding-left: 5rem;
-        padding-right: 5rem;
-        padding-top: 2rem;
+        padding: 2rem 5rem;
     }
     
-    /* Gradient background */
     .stApp {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     }
     
-    /* Main container with white background */
     .main-content {
         background: white;
         border-radius: 30px;
@@ -51,7 +44,6 @@ st.markdown("""
         margin: 2rem auto;
     }
     
-    /* Hero section */
     .hero {
         text-align: center;
         padding: 3rem 2rem 2rem 2rem;
@@ -75,22 +67,6 @@ st.markdown("""
         font-weight: 500;
     }
     
-    /* Control cards */
-    .control-card {
-        background: #f8f9fa;
-        border-radius: 15px;
-        padding: 2rem;
-        margin-bottom: 2rem;
-        border: 2px solid #e9ecef;
-        transition: all 0.3s ease;
-    }
-    
-    .control-card:hover {
-        border-color: #667eea;
-        box-shadow: 0 5px 20px rgba(102, 126, 234, 0.2);
-    }
-    
-    /* Section titles */
     .section-title {
         font-size: 1.8rem;
         font-weight: 700;
@@ -100,22 +76,15 @@ st.markdown("""
         border-bottom: 3px solid #667eea;
     }
     
-    /* Metrics */
     .stMetric {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         padding: 1.5rem;
         border-radius: 15px;
-        color: white;
         box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-        transition: transform 0.3s ease;
-    }
-    
-    .stMetric:hover {
-        transform: translateY(-5px);
     }
     
     .stMetric label {
-        color: rgba(255,255,255,0.9) !important;
+        color: rgba(255,255,255,0.95) !important;
         font-size: 0.95rem !important;
         font-weight: 600 !important;
     }
@@ -127,10 +96,9 @@ st.markdown("""
     }
     
     .stMetric [data-testid="stMetricDelta"] {
-        color: rgba(255,255,255,0.8) !important;
+        color: rgba(255,255,255,0.9) !important;
     }
     
-    /* Big action button */
     .stButton>button {
         width: 100%;
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -140,7 +108,6 @@ st.markdown("""
         padding: 1.2rem 3rem;
         border-radius: 50px;
         font-size: 1.3rem;
-        transition: all 0.3s ease;
         box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         margin-top: 1rem;
     }
@@ -150,12 +117,6 @@ st.markdown("""
         box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
     }
     
-    /* Input styling */
-    .stSelectbox, .stSlider, .stDateInput {
-        background: white;
-    }
-    
-    /* Tabs */
     .stTabs [data-baseweb="tab-list"] {
         gap: 10px;
         background: #f8f9fa;
@@ -167,14 +128,14 @@ st.markdown("""
         border-radius: 10px;
         padding: 0.8rem 1.5rem;
         font-weight: 600;
+        color: #333 !important;
     }
     
     .stTabs [aria-selected="true"] {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+        color: white !important;
     }
     
-    /* Info box */
     .info-box {
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         padding: 2rem;
@@ -187,17 +148,14 @@ st.markdown("""
     .info-box h3 {
         margin-top: 0;
         color: white;
-        font-size: 1.5rem;
     }
     
-    /* Feature cards */
     .feature-card {
-        background: white;
+        background: #f8f9fa;
         border: 2px solid #e9ecef;
         border-radius: 15px;
         padding: 2rem;
         text-align: center;
-        transition: all 0.3s ease;
         height: 100%;
     }
     
@@ -213,53 +171,65 @@ st.markdown("""
         margin-bottom: 1rem;
     }
     
-    /* Download button */
-    .download-btn {
-        background: #28a745;
-        color: white;
-        padding: 0.8rem 2rem;
-        border-radius: 25px;
-        text-decoration: none;
-        font-weight: 600;
-        display: inline-block;
-        transition: all 0.3s ease;
+    .feature-card p {
+        color: #555;
+        line-height: 1.6;
     }
     
-    .download-btn:hover {
-        background: #218838;
-        transform: scale(1.05);
-    }
-    
-    /* Progress bar */
-    .stProgress > div > div > div > div {
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-    }
-    
-    /* Expander */
-    .streamlit-expanderHeader {
+    .stats-box {
         background: #f8f9fa;
-        border-radius: 10px;
-        font-weight: 600;
-        font-size: 1.1rem;
+        border-radius: 15px;
+        padding: 1.5rem;
+        border: 2px solid #e9ecef;
+        margin: 1rem 0;
+    }
+    
+    .stats-box h3 {
         color: #667eea;
+        margin-top: 0;
     }
     
-    /* Success/Error messages */
-    .stSuccess {
-        background: #d4edda;
-        border-left: 5px solid #28a745;
-        border-radius: 10px;
+    .guide-section {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-radius: 15px;
+        margin: 1rem 0;
+        border-left: 5px solid #667eea;
     }
     
-    .stError {
-        background: #f8d7da;
-        border-left: 5px solid #dc3545;
+    .guide-section h4 {
+        color: #667eea;
+        margin-top: 0;
+    }
+    
+    .guide-section p {
+        color: #555;
+        line-height: 1.8;
+    }
+    
+    .output-summary {
+        background: #f0f7ff;
+        border: 3px solid #667eea;
+        border-radius: 20px;
+        padding: 2rem;
+        margin: 2rem 0;
+    }
+    
+    .output-summary h2 {
+        color: #667eea;
+        margin-top: 0;
+    }
+    
+    .summary-metric {
+        background: white;
+        padding: 1rem;
         border-radius: 10px;
+        margin: 0.5rem 0;
+        border-left: 4px solid #667eea;
     }
 </style>
 """, unsafe_allow_html=True)
 
-# Main content wrapper
 st.markdown('<div class="main-content">', unsafe_allow_html=True)
 
 # Hero Section
@@ -270,7 +240,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-# Predefined stock lists (NO WIKIPEDIA NEEDED!)
+# Predefined stock lists
 POPULAR_STOCKS = {
     "🚀 Tech Giants": ["AAPL", "MSFT", "GOOGL", "AMZN", "META", "NVDA", "TSLA", "NFLX", "ADBE", "CRM"],
     "💼 Blue Chips": ["JPM", "JNJ", "PG", "WMT", "V", "UNH", "HD", "DIS", "BA", "CAT"],
@@ -290,7 +260,7 @@ POPULAR_STOCKS = {
 # Control Panel
 st.markdown('<p class="section-title">⚙️ Configure Your Strategy</p>', unsafe_allow_html=True)
 
-tab1, tab2, tab3 = st.tabs(["📊 Basic Settings", "⚙️ Advanced Settings", "📁 Data Management"])
+tab1, tab2 = st.tabs(["📊 Basic Settings", "📁 Data Management"])
 
 with tab1:
     col1, col2 = st.columns(2)
@@ -299,39 +269,31 @@ with tab1:
         stock_universe = st.selectbox(
             "📊 Stock Universe",
             list(POPULAR_STOCKS.keys()),
-            index=3,
+            index=0,
             help="Choose a predefined set of stocks"
         )
         
         n_clusters = st.slider(
             "🎯 Number of Clusters",
             min_value=3,
-            max_value=10,
-            value=5,
+            max_value=8,
+            value=4,
             help="More clusters = finer segmentation"
         )
         
         start_date = st.date_input(
             "📅 Start Date",
-            datetime(2020, 1, 1),
+            datetime(2022, 1, 1),
             help="Beginning of backtest period"
         )
     
     with col2:
         top_n_stocks = st.slider(
             "💼 Portfolio Size",
-            min_value=5,
-            max_value=30,
-            value=15,
+            min_value=3,
+            max_value=15,
+            value=5,
             help="Number of stocks to hold"
-        )
-        
-        lookback_period = st.slider(
-            "📈 Lookback Period (days)",
-            min_value=100,
-            max_value=500,
-            value=252,
-            help="Historical data window"
         )
         
         end_date = st.date_input(
@@ -341,61 +303,13 @@ with tab1:
         )
 
 with tab2:
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        rebalance_freq = st.slider(
-            "🔄 Rebalance Frequency (days)",
-            min_value=30,
-            max_value=180,
-            value=90,
-            help="How often to adjust portfolio"
-        )
-    
-    with col2:
-        min_data_threshold = st.slider(
-            "📊 Min Data Completeness (%)",
-            min_value=50,
-            max_value=100,
-            value=80,
-            help="Filter stocks with insufficient data"
-        )
-    
-    # Cache clearing button
-    st.markdown("---")
-    if st.button("🗑️ Clear Data Cache", help="Clear yfinance cache if experiencing errors"):
-        clear_yfinance_cache()
-        st.cache_data.clear()
-        st.success("✅ Cache cleared! Try running again.")
-        st.rerun()
-
-with tab3:
     data_mode = st.radio(
         "📁 Data Source",
-        ["Download Fresh Data", "Upload CSV File"],
-        help="Choose how to get stock data"
+        ["Download Fresh Data"],
+        help="Download stock data from Yahoo Finance"
     )
     
-    if data_mode == "Upload CSV File":
-        st.markdown("### 📤 Upload Your Data")
-        uploaded_file = st.file_uploader(
-            "Upload CSV file with stock prices",
-            type=['csv'],
-            help="Format: Date (index) | Stock1 | Stock2 | ..."
-        )
-        
-        if uploaded_file:
-            try:
-                uploaded_data = pd.read_csv(uploaded_file, index_col=0, parse_dates=True)
-                st.success(f"✅ Loaded {len(uploaded_data.columns)} stocks, {len(uploaded_data)} days")
-                
-                # Preview
-                with st.expander("👀 Preview Data"):
-                    st.dataframe(uploaded_data.head(), use_container_width=True)
-            except Exception as e:
-                st.error(f"❌ Error loading file: {str(e)}")
-    else:
-        st.info(f"📊 Will download {len(POPULAR_STOCKS[stock_universe])} stocks from Yahoo Finance")
+    st.info(f"📊 Will download {len(POPULAR_STOCKS[stock_universe])} stocks from Yahoo Finance")
 
 # Big action button
 st.markdown("<br>", unsafe_allow_html=True)
@@ -407,71 +321,38 @@ if run_backtest:
     st.session_state.run = True
 
 # Functions
-def clear_yfinance_cache():
-    """Clear yfinance cache to prevent database locks"""
-    import shutil
-    import os
-    
-    cache_dir = os.path.expanduser('~/.cache/py-yfinance')
-    if os.path.exists(cache_dir):
-        try:
-            shutil.rmtree(cache_dir)
-        except:
-            pass
-
 @st.cache_data(show_spinner=False, ttl=3600)
 def download_stock_data(tickers, start, end):
-    """Download stock data with proper error handling and retry logic"""
+    """Download stock data"""
     import time
-    
-    # Method 1: Try batch download first (faster)
-    try:
-        data = yf.download(
-            tickers, 
-            start=start, 
-            end=end, 
-            progress=False,
-            threads=False,
-            group_by='column'
-        )
-        
-        if len(tickers) == 1:
-            data = data['Adj Close'].to_frame(name=tickers[0])
-        else:
-            data = data['Adj Close']
-        
-        if len(data) > 0:
-            data = data.dropna(axis=1, thresh=len(data)*0.8)
-            return data
-    except:
-        pass
-    
-    # Method 2: Download one by one (slower but more reliable)
-    st.info("⏳ Using sequential download (more reliable)...")
     
     all_data = {}
     failed = []
     
-    for ticker in tickers:
+    progress_text = st.empty()
+    
+    for i, ticker in enumerate(tickers):
         try:
+            progress_text.text(f"⏳ Downloading {ticker} ({i+1}/{len(tickers)})...")
             ticker_data = yf.download(ticker, start=start, end=end, progress=False)
-            if 'Adj Close' in ticker_data.columns:
+            
+            if not ticker_data.empty and 'Adj Close' in ticker_data.columns:
                 all_data[ticker] = ticker_data['Adj Close']
-            elif len(ticker_data.columns) > 0:
-                all_data[ticker] = ticker_data.iloc[:, 0]
             
-            time.sleep(0.1)  # Small delay to avoid rate limits
+            time.sleep(0.05)
             
-        except Exception as e:
+        except:
             failed.append(ticker)
-            continue
+    
+    progress_text.empty()
     
     if failed:
-        st.warning(f"⚠️ Failed to download: {', '.join(failed[:5])}")
+        st.warning(f"⚠️ Failed: {', '.join(failed[:3])}")
     
     if all_data:
         data = pd.DataFrame(all_data)
-        data = data.dropna(axis=1, thresh=len(data)*0.8)
+        threshold = len(data) * 0.7
+        data = data.dropna(axis=1, thresh=int(threshold))
         return data
     
     return None
@@ -481,82 +362,109 @@ def calculate_features(data):
     features_dict = {}
     
     for ticker in data.columns:
-        prices = data[ticker].dropna()
-        if len(prices) < 100:
-            continue
+        try:
+            prices = data[ticker].dropna()
+            if len(prices) < 50:
+                continue
+                
+            returns = prices.pct_change().dropna()
             
-        returns = prices.pct_change()
-        
-        features_dict[ticker] = {
-            'mean_return': returns.mean() * 252,
-            'volatility': returns.std() * np.sqrt(252),
-            'sharpe_ratio': (returns.mean() / returns.std()) * np.sqrt(252) if returns.std() > 0 else 0,
-            'momentum_1m': prices.pct_change(21).iloc[-1] if len(prices) > 21 else 0,
-            'momentum_3m': prices.pct_change(63).iloc[-1] if len(prices) > 63 else 0,
-            'momentum_6m': prices.pct_change(126).iloc[-1] if len(prices) > 126 else 0,
-            'momentum_12m': prices.pct_change(252).iloc[-1] if len(prices) > 252 else 0,
-            'rsi': calculate_rsi(prices),
-            'max_drawdown': calculate_max_drawdown(prices)
-        }
+            if len(returns) == 0:
+                continue
+            
+            mean_ret = returns.mean() * 252
+            vol = returns.std() * np.sqrt(252)
+            sharpe = (mean_ret / vol) if vol > 0 else 0
+            
+            features_dict[ticker] = {
+                'mean_return': mean_ret,
+                'volatility': vol,
+                'sharpe_ratio': sharpe,
+                'momentum_1m': prices.pct_change(21).iloc[-1] if len(prices) > 21 else 0,
+                'momentum_3m': prices.pct_change(63).iloc[-1] if len(prices) > 63 else 0,
+                'momentum_6m': prices.pct_change(126).iloc[-1] if len(prices) > 126 else 0,
+                'momentum_12m': prices.pct_change(252).iloc[-1] if len(prices) > 252 else 0,
+                'rsi': calculate_rsi(prices),
+                'max_drawdown': calculate_max_drawdown(prices)
+            }
+        except:
+            continue
     
+    if not features_dict:
+        return None
+        
     return pd.DataFrame(features_dict).T
 
 def calculate_rsi(prices, period=14):
     """Calculate RSI"""
-    delta = prices.diff()
-    gain = (delta.where(delta > 0, 0)).rolling(window=period).mean()
-    loss = (-delta.where(delta < 0, 0)).rolling(window=period).mean()
-    rs = gain / loss
-    rsi = 100 - (100 / (1 + rs))
-    return rsi.iloc[-1] if len(rsi) > 0 else 50
+    try:
+        delta = prices.diff()
+        gain = (delta.where(delta > 0, 0)).rolling(window=period).mean()
+        loss = (-delta.where(delta < 0, 0)).rolling(window=period).mean()
+        rs = gain / loss
+        rsi = 100 - (100 / (1 + rs))
+        return rsi.iloc[-1] if len(rsi) > 0 and not np.isnan(rsi.iloc[-1]) else 50
+    except:
+        return 50
 
 def calculate_max_drawdown(prices):
     """Calculate max drawdown"""
-    cumulative = (1 + prices.pct_change()).cumprod()
-    running_max = cumulative.cummax()
-    drawdown = (cumulative - running_max) / running_max
-    return drawdown.min()
+    try:
+        cumulative = (1 + prices.pct_change()).cumprod()
+        running_max = cumulative.cummax()
+        drawdown = (cumulative - running_max) / running_max
+        return drawdown.min()
+    except:
+        return 0
 
 def perform_clustering(features, n_clusters):
     """Perform K-Means clustering"""
     features_clean = features.dropna()
+    
+    if len(features_clean) < n_clusters:
+        raise ValueError(f"Not enough stocks for {n_clusters} clusters")
+    
+    numeric_features = features_clean.select_dtypes(include=[np.number])
+    
     scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(features_clean)
+    X_scaled = scaler.fit_transform(numeric_features)
+    
     kmeans = KMeans(n_clusters=n_clusters, random_state=42, n_init=10)
     clusters = kmeans.fit_predict(X_scaled)
+    
     features_clean['cluster'] = clusters
+    
     pca = PCA(n_components=2)
     X_pca = pca.fit_transform(X_scaled)
+    
     return features_clean, X_pca, kmeans, scaler, pca
 
 def calculate_portfolio_performance(data, selected_stocks):
-    """Calculate returns"""
+    """Calculate portfolio returns"""
     portfolio_data = data[selected_stocks].dropna()
+    
+    if portfolio_data.empty:
+        return None, None
+        
     portfolio_returns = portfolio_data.pct_change().mean(axis=1)
     cumulative_returns = (1 + portfolio_returns).cumprod()
+    
     return portfolio_returns, cumulative_returns
 
 # Main execution
 if 'run' in st.session_state and st.session_state.run:
     try:
-        # Progress
-        progress_container = st.container()
-        with progress_container:
-            progress_bar = st.progress(0)
-            status_text = st.empty()
+        progress_bar = st.progress(0)
+        status_text = st.empty()
         
-        # Get data
-        if data_mode == "Upload CSV File" and 'uploaded_data' in locals():
-            data = uploaded_data
-            status_text.markdown("### ✅ Using uploaded data")
-        else:
-            tickers = POPULAR_STOCKS[stock_universe]
-            status_text.markdown(f"### 📊 Downloading {len(tickers)} stocks...")
-            progress_bar.progress(20)
-            data = download_stock_data(tickers, start_date, end_date)
+        # Download data
+        tickers = POPULAR_STOCKS[stock_universe]
+        status_text.markdown(f"### 📊 Downloading {len(tickers)} stocks...")
+        progress_bar.progress(20)
+        data = download_stock_data(tickers, start_date, end_date)
         
-        if data is None or len(data) < 50:
-            st.error("❌ Insufficient data. Please adjust parameters.")
+        if data is None or len(data) < 5:
+            st.error("❌ Insufficient data. Try different dates.")
             st.stop()
         
         status_text.markdown(f"### ✅ Processing {len(data.columns)} stocks")
@@ -564,6 +472,11 @@ if 'run' in st.session_state and st.session_state.run:
         
         # Calculate features
         features = calculate_features(data)
+        
+        if features is None or len(features) < n_clusters:
+            st.error(f"❌ Not enough stocks. Reduce clusters to {max(3, len(features)-1)}")
+            st.stop()
+            
         progress_bar.progress(60)
         
         # Clustering
@@ -582,17 +495,23 @@ if 'run' in st.session_state and st.session_state.run:
         best_cluster = cluster_stats['sharpe_ratio'].idxmax()
         
         cluster_stocks = features_clustered[features_clustered['cluster'] == best_cluster]
-        top_stocks = cluster_stocks.nlargest(top_n_stocks, 'sharpe_ratio').index.tolist()
+        actual_top_n = min(top_n_stocks, len(cluster_stocks))
+        top_stocks = cluster_stocks.nlargest(actual_top_n, 'sharpe_ratio').index.tolist()
         
         # Portfolio performance
         portfolio_returns, cumulative_returns = calculate_portfolio_performance(data, top_stocks)
         
+        if portfolio_returns is None:
+            st.error("❌ Could not calculate returns.")
+            st.stop()
+        
         # Benchmark
-        sp500 = yf.download("^GSPC", start=start_date, end=end_date, progress=False, threads=False)['Adj Close']
+        status_text.markdown("### 📊 Fetching S&P 500...")
+        sp500 = yf.download("^GSPC", start=start_date, end=end_date, progress=False)['Adj Close']
         sp500_returns = sp500.pct_change()
         sp500_cumulative = (1 + sp500_returns).cumprod()
         
-        # Align
+        # Align dates
         common_dates = portfolio_returns.index.intersection(sp500_returns.index)
         portfolio_returns = portfolio_returns.loc[common_dates]
         sp500_returns = sp500_returns.loc[common_dates]
@@ -605,10 +524,14 @@ if 'run' in st.session_state and st.session_state.run:
         
         st.success("🎉 Analysis Complete!")
         
-        # RESULTS
-        st.markdown('<p class="section-title">📊 Performance Overview</p>', unsafe_allow_html=True)
+        # ============ OUTPUT SUMMARY ============
+        st.markdown("""
+        <div class="output-summary">
+            <h2>📋 BACKTEST RESULTS SUMMARY</h2>
+        </div>
+        """, unsafe_allow_html=True)
         
-        # Metrics
+        # Calculate metrics
         total_return = (cumulative_returns.iloc[-1] - 1) * 100
         sp500_total_return = (sp500_cumulative.iloc[-1] - 1) * 100
         ann_return = portfolio_returns.mean() * 252 * 100
@@ -616,163 +539,170 @@ if 'run' in st.session_state and st.session_state.run:
         sharpe = (portfolio_returns.mean() / portfolio_returns.std()) * np.sqrt(252)
         sp500_ann_return = sp500_returns.mean() * 252 * 100
         sp500_sharpe = (sp500_returns.mean() / sp500_returns.std()) * np.sqrt(252)
+        max_dd = ((cumulative_returns / cumulative_returns.cummax()) - 1).min() * 100
+        
+        # Summary text
+        st.markdown(f"""
+        <div class="summary-metric">
+            <strong>📊 Strategy Performance:</strong> Your AI-selected portfolio of {actual_top_n} stocks from Cluster {best_cluster} 
+            achieved a total return of <strong style="color: {'green' if total_return > 0 else 'red'};">{total_return:.2f}%</strong> 
+            compared to S&P 500's {sp500_total_return:.2f}% (outperformance: {total_return - sp500_total_return:.2f}%)
+        </div>
+        
+        <div class="summary-metric">
+            <strong>📈 Risk-Adjusted Returns:</strong> Sharpe Ratio of <strong style="color: #667eea;">{sharpe:.3f}</strong> 
+            vs S&P 500's {sp500_sharpe:.3f}, indicating {'better' if sharpe > sp500_sharpe else 'lower'} risk-adjusted performance
+        </div>
+        
+        <div class="summary-metric">
+            <strong>⚠️ Risk Metrics:</strong> Maximum drawdown was <strong>{max_dd:.2f}%</strong> with 
+            annualized volatility of {ann_vol:.2f}%
+        </div>
+        
+        <div class="summary-metric">
+            <strong>🤖 ML Insights:</strong> K-Means identified {n_clusters} distinct clusters. 
+            The best performing cluster contained {len(cluster_stocks)} stocks with average Sharpe ratio of {cluster_stats.loc[best_cluster, 'sharpe_ratio']:.3f}
+        </div>
+        
+        <div class="summary-metric">
+            <strong>💼 Selected Portfolio:</strong> {', '.join(top_stocks)}
+        </div>
+        """, unsafe_allow_html=True)
+        
+        # PERFORMANCE METRICS
+        st.markdown('<p class="section-title">📊 Performance Metrics</p>', unsafe_allow_html=True)
         
         col1, col2, col3, col4 = st.columns(4)
         
         with col1:
             st.metric("Total Return", f"{total_return:.2f}%", 
-                     delta=f"{total_return - sp500_total_return:.2f}% vs S&P500")
+                     delta=f"{total_return - sp500_total_return:.2f}% vs S&P")
         with col2:
             st.metric("Annual Return", f"{ann_return:.2f}%",
-                     delta=f"{ann_return - sp500_ann_return:.2f}% vs S&P500")
+                     delta=f"{ann_return - sp500_ann_return:.2f}% vs S&P")
         with col3:
             st.metric("Sharpe Ratio", f"{sharpe:.3f}",
-                     delta=f"{sharpe - sp500_sharpe:.3f} vs S&P500")
+                     delta=f"{sharpe - sp500_sharpe:.3f} vs S&P")
         with col4:
-            st.metric("Volatility", f"{ann_vol:.2f}%")
+            st.metric("Max Drawdown", f"{max_dd:.2f}%")
         
-        # Chart
-        st.markdown('<p class="section-title">💹 Cumulative Returns</p>', unsafe_allow_html=True)
+        # CUMULATIVE RETURNS CHART
+        st.markdown('<p class="section-title">💹 Cumulative Returns Over Time</p>', unsafe_allow_html=True)
         
         fig = go.Figure()
         fig.add_trace(go.Scatter(
             x=cumulative_returns.index, y=(cumulative_returns - 1) * 100,
-            name='AI Strategy', line=dict(color='#667eea', width=3), fill='tonexty'
+            name='AI Strategy', line=dict(color='#667eea', width=3),
+            fill='tozeroy', fillcolor='rgba(102, 126, 234, 0.1)'
         ))
         fig.add_trace(go.Scatter(
             x=sp500_cumulative.index, y=(sp500_cumulative - 1) * 100,
             name='S&P 500', line=dict(color='#764ba2', width=3, dash='dash')
         ))
         fig.update_layout(
-            height=500, xaxis_title='Date', yaxis_title='Return (%)',
-            hovermode='x unified', plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)'
+            height=500, 
+            xaxis_title='Date', 
+            yaxis_title='Cumulative Return (%)',
+            hovermode='x unified', 
+            plot_bgcolor='white',
+            paper_bgcolor='white',
+            xaxis=dict(showgrid=True, gridcolor='#f0f0f0'),
+            yaxis=dict(showgrid=True, gridcolor='#f0f0f0'),
+            legend=dict(x=0.01, y=0.99, bgcolor='rgba(255,255,255,0.8)')
         )
         st.plotly_chart(fig, use_container_width=True)
         
-        # Cluster analysis
+        # CLUSTER ANALYSIS
         col1, col2 = st.columns(2)
         
         with col1:
-            st.markdown("### 📈 Cluster Statistics")
-            cluster_display = cluster_stats.round(4)
-            cluster_display.columns = ['Return', 'Vol', 'Sharpe', 'Mom', 'Count']
-            st.dataframe(cluster_display.style.background_gradient(cmap='RdYlGn', subset=['Sharpe']),
-                        use_container_width=True)
+            st.markdown("### 📈 All Clusters Performance")
+            cluster_display = cluster_stats.copy()
+            cluster_display['Return'] = (cluster_display['mean_return'] * 100).round(2)
+            cluster_display['Vol'] = (cluster_display['volatility'] * 100).round(2)
+            cluster_display['Sharpe'] = cluster_display['sharpe_ratio'].round(3)
+            cluster_display['Mom'] = (cluster_display['momentum_12m'] * 100).round(2)
+            cluster_display = cluster_display[['Return', 'Vol', 'Sharpe', 'Mom', 'count']]
+            cluster_display.columns = ['Return %', 'Vol %', 'Sharpe', 'Momentum %', 'Stocks']
+            
+            st.dataframe(
+                cluster_display.style.background_gradient(cmap='RdYlGn', subset=['Sharpe']).format(precision=2),
+                use_container_width=True
+            )
+            st.caption(f"⭐ Best Cluster: #{best_cluster} with Sharpe Ratio of {cluster_stats.loc[best_cluster, 'sharpe_ratio']:.3f}")
         
         with col2:
             st.markdown("### 🎯 PCA Visualization")
             fig = go.Figure()
-            for cluster in range(n_clusters):
+            colors = px.colors.qualitative.Set2[:n_clusters]
+            
+            for i, cluster in enumerate(range(n_clusters)):
                 mask = features_clustered['cluster'] == cluster
+                is_best = (cluster == best_cluster)
                 fig.add_trace(go.Scatter(
-                    x=X_pca[mask, 0], y=X_pca[mask, 1],
-                    mode='markers', name=f'Cluster {cluster}',
-                    marker=dict(size=10, opacity=0.7)
+                    x=X_pca[mask, 0], 
+                    y=X_pca[mask, 1],
+                    mode='markers', 
+                    name=f'Cluster {cluster}' + (' ⭐' if is_best else ''),
+                    marker=dict(
+                        size=12 if is_best else 8, 
+                        opacity=0.8,
+                        color=colors[i],
+                        line=dict(width=2, color='white') if is_best else dict(width=0)
+                    )
                 ))
-            fig.update_layout(height=350, plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)')
+            
+            fig.update_layout(
+                height=400, 
+                plot_bgcolor='white', 
+                paper_bgcolor='white',
+                xaxis=dict(showgrid=True, gridcolor='#f0f0f0', title='Principal Component 1'),
+                yaxis=dict(showgrid=True, gridcolor='#f0f0f0', title='Principal Component 2'),
+                legend=dict(x=0.01, y=0.99)
+            )
             st.plotly_chart(fig, use_container_width=True)
         
-        # Selected stocks
-        st.markdown(f"### 📋 Selected Portfolio (Cluster {best_cluster})")
-        selected_df = cluster_stocks.loc[top_stocks][['mean_return', 'volatility', 'sharpe_ratio', 'momentum_12m']]
-        selected_df.columns = ['Return', 'Volatility', 'Sharpe', '12M Mom']
-        st.dataframe((selected_df * 100).round(2).style.background_gradient(cmap='RdYlGn', subset=['Sharpe']),
-                    use_container_width=True)
+        # SELECTED PORTFOLIO
+        st.markdown(f'<p class="section-title">💼 Selected Portfolio Details (Cluster {best_cluster})</p>', unsafe_allow_html=True)
         
-        # Download results
-        st.markdown("### 📥 Download Results")
+        selected_df = cluster_stocks.loc[top_stocks][['mean_return', 'volatility', 'sharpe_ratio', 'momentum_12m', 'rsi']].copy()
+        selected_df['Return %'] = (selected_df['mean_return'] * 100).round(2)
+        selected_df['Vol %'] = (selected_df['volatility'] * 100).round(2)
+        selected_df['Sharpe'] = selected_df['sharpe_ratio'].round(3)
+        selected_df['Momentum %'] = (selected_df['momentum_12m'] * 100).round(2)
+        selected_df['RSI'] = selected_df['rsi'].round(1)
+        selected_df = selected_df[['Return %', 'Vol %', 'Sharpe', 'Momentum %', 'RSI']]
+        
+        st.dataframe(
+            selected_df.style.background_gradient(cmap='RdYlGn', subset=['Sharpe', 'Return %']).format(precision=2),
+            use_container_width=True
+        )
+        
+        # DOWNLOAD SECTION
+        st.markdown('<p class="section-title">📥 Download Results</p>', unsafe_allow_html=True)
+        
         col1, col2, col3 = st.columns(3)
         
         with col1:
             csv = selected_df.to_csv()
-            st.download_button("📄 Download Portfolio CSV", csv, "portfolio.csv", "text/csv")
+            st.download_button("📄 Portfolio CSV", csv, "portfolio.csv", "text/csv")
         
         with col2:
             results_csv = pd.DataFrame({
                 'Date': cumulative_returns.index,
-                'Strategy Return': (cumulative_returns - 1) * 100,
-                'SP500 Return': (sp500_cumulative.loc[common_dates] - 1) * 100
+                'Strategy Return %': (cumulative_returns - 1) * 100,
+                'SP500 Return %': (sp500_cumulative.loc[common_dates] - 1) * 100
             }).to_csv(index=False)
-            st.download_button("📈 Download Returns CSV", results_csv, "returns.csv", "text/csv")
+            st.download_button("📈 Returns CSV", results_csv, "returns.csv", "text/csv")
         
         with col3:
-            # Save original data
             data_csv = data.to_csv()
-            st.download_button("💾 Download Price Data", data_csv, "price_data.csv", "text/csv")
+            st.download_button("💾 Price Data", data_csv, "price_data.csv", "text/csv")
         
-    except Exception as e:
-        st.error(f"❌ Error: {str(e)}")
-        with st.expander("🔍 See error details"):
-            st.exception(e)
-
-else:
-    # Landing page
-    st.markdown("""
-    <div class='info-box'>
-        <h3>🚀 Ready to Start?</h3>
-        <p style='font-size: 1.1rem; margin-bottom: 0;'>
-            Configure your strategy above and click <b>"RUN BACKTEST NOW"</b> to unleash the power of AI!
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    col1, col2, col3 = st.columns(3)
-    
-    with col1:
+        # FINAL SUMMARY
         st.markdown("""
-        <div class="feature-card">
-            <h3>🤖 Machine Learning</h3>
-            <p>K-Means clustering identifies stocks with similar risk-return profiles automatically</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col2:
-        st.markdown("""
-        <div class="feature-card">
-            <h3>📊 9 Indicators</h3>
-            <p>Analyzes momentum, volatility, Sharpe ratio, RSI, and drawdown for each stock</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col3:
-        st.markdown("""
-        <div class="feature-card">
-            <h3>💹 Risk-Adjusted</h3>
-            <p>Selects portfolios based on Sharpe ratio for optimal risk-adjusted returns</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    # Quick start guide
-    st.markdown('<p class="section-title">📖 Quick Start Guide</p>', unsafe_allow_html=True)
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        st.markdown("""
-        #### 1️⃣ Choose Your Universe
-        - Select from 7 predefined stock lists
-        - No Wikipedia scraping needed!
-        - Includes Tech, Finance, Energy, Healthcare
-        
-        #### 2️⃣ Set Parameters
-        - Number of clusters (3-10)
-        - Portfolio size (5-30 stocks)
-        - Date range for backtesting
-        """)
-    
-    with col2:
-        st.markdown("""
-        #### 3️⃣ Run Analysis
-        - Click the big button
-        - Wait 30-60 seconds
-        - Get complete results!
-        
-        #### 4️⃣ Download Data
-        - Export portfolio picks
-        - Save performance results
-        - Download price data
-        """)
-
-# Close main content wrapper
-st.markdown('</div>', unsafe_allow_html=True)
+        <div class="info-box">
+            <h3>✅ Analysis Complete!</h3>
+            <p><strong>What Just Happened:</strong></p>
+            <ul style="text-align: left; line-height: 1.8;">
+                <li>
